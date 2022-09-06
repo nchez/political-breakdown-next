@@ -15,8 +15,8 @@ export default function Stock({ prices, stock }) {
   )
 }
 export async function getStaticPaths() {
-  const response = await loadStocks()
-  const paths = response.stocks.map((element) => ({
+  const { stocks } = await loadStocks()
+  const paths = stocks.map((element) => ({
     params: {
       Stock: element.symbol,
     },

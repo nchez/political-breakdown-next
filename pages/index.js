@@ -7,7 +7,7 @@ import { loadStock, loadStocks } from '../lib/loadStocks'
 export default function Home() {
   useEffect(async () => {
     const response = await loadStocks()
-    console.log(response.stocks)
+    console.log(response)
   }, [])
   return <div className={styles.container}></div>
 }
