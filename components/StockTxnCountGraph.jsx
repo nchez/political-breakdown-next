@@ -1,54 +1,65 @@
 import {
-  AnimatedAxis, // any of these can be non-animated equivalents
-  AnimatedGrid,
-  AnimatedLineSeries,
-  XYChart,
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
   Tooltip,
-} from '@visx/xychart'
+  Legen,
+  Filler,
+} from 'chart.js'
+import { Bar, Line, Scatter, Bubble, Chart } from 'react-chartjs-2'
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legen,
+  Filler
+)
 
 export default function StockTxnCountGraph({ prices }) {
-  const data1 = prices.map((element) => ({
-    x: element.date.toString().slice(0, 10),
-    y: element.close,
-  }))
-
-  const data2 = prices.map((element) => ({
-    x: element.date.toString().slice(0, 10),
-    y: element.txnCount,
-  }))
-
-  const accessors = {
-    xAccessor: (d) => d.x,
-    yAccessor: (d) => d.y,
+  const dateToString = (dateObj) => {
+    const ogString = dateObj.toString()
+    let dateString =
+      ogString.slice(5, 7) +
+      '/' +
+      ogString.slice(8, 10) +
+      '/' +
+      ogString.slice(0, 4)
+    return dateString
   }
+  const pricesY = prices.map((e) => e.close)
+  const datesX = prices.map((e) => dateToString(e.transactionDate))
+
+  const tradesY = prices.map((e) => e.txnCount)
+
+  const labels = datesX
+
+  const trades = {
+    type: 'bar',
+    label: 'Trades',
+    borderRadius: 30,
+    data: tradesY,
+    backgroundColor: 'rgba(32,214,155,1)',
+    barThickness: 10,
+  }
+  const pricesDataset = {
+    type: 'line',
+    label: 'Prices',
+    data: pricesY,
+    backgroundColor: 'rgba(1,98,255,1)',
+  }
+
+  const data = { labels: labels, datasets: [trades, pricesDataset] }
+
   return (
     <>
-      <XYChart
-        height={300}
-        xScale={{ type: 'band' }}
-        yScale={{ type: 'linear' }}
-      >
-        <AnimatedAxis orientation="bottom" />
-        <AnimatedGrid columns={false} numTicks={4} />
-        <AnimatedLineSeries dataKey="Line 1" data={data1} {...accessors} />
-        <AnimatedLineSeries dataKey="Line 2" data={data2} {...accessors} />
-        <Tooltip
-          snapTooltipToDatumX
-          snapTooltipToDatumY
-          showVerticalCrosshair
-          showSeriesGlyphs
-          renderTooltip={({ tooltipData, colorScale }) => (
-            <div>
-              <div style={{ color: colorScale(tooltipData.nearestDatum.key) }}>
-                {tooltipData.nearestDatum.key}
-              </div>
-              {accessors.xAccessor(tooltipData.nearestDatum.datum)}
-              {', '}
-              {accessors.yAccessor(tooltipData.nearestDatum.datum)}
-            </div>
-          )}
-        />
-      </XYChart>
+      <Chart type={bar} data={data} />
     </>
   )
 }

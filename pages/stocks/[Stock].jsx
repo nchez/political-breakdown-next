@@ -1,19 +1,31 @@
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import StockTxnCountGraph from '../../components/StockTxnCountGraph'
-import { loadStocks, loadSingleStock } from '../../lib/loadStocks'
+import TransactionsTable from '../../components/TransactionsTable'
+import {
+  loadStocks,
+  loadSingleStockPrices,
+  loadSingleStockTrades,
+} from '../../lib/loadStocks'
+import dynamic from 'next/dynamic'
 
-export default function Stock({ prices, stock }) {
+const DynamicPlot = dynamic(import('../../components/StockTxnCountGraph'), {
+  ssr: false,
+})
+
+export default function Stock({ prices, trades }) {
   const router = useRouter()
   const { Stock } = router.query
   return (
     <>
-      <h1>Stock Symbol: {stock[0].symbol.toUpperCase()}</h1>
-      <StockTxnCountGraph prices={prices} />
+      <h1>Stock Symbol: {prices[0].symbol.toUpperCase()}</h1>
+      <DynamicPlot prices={prices} />
       <h3>Length of price array: {prices.length}</h3>
+      <TransactionsTable symbol={Stock.toLowerCase()} trades={trades} />
     </>
   )
 }
+
 export async function getStaticPaths() {
   const { stocks } = await loadStocks()
   const paths = stocks.map((element) => ({
@@ -28,8 +40,11 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const response = await loadSingleStock(params.Stock)
+  const [{ prices }, { trades }] = await Promise.all([
+    loadSingleStockPrices(params.Stock),
+    loadSingleStockTrades(params.Stock),
+  ])
   return {
-    props: { prices: response.price, stock: response.stock },
+    props: { prices: prices, trades: trades },
   }
 }
