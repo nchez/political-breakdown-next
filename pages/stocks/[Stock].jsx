@@ -1,17 +1,17 @@
+import React from 'react'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
-import StockTxnCountGraph from '../../components/StockTxnCountGraph'
 import TransactionsTable from '../../components/TransactionsTable'
 import {
   loadStocks,
   loadSingleStockPrices,
   loadSingleStockTrades,
 } from '../../lib/loadStocks'
-import dynamic from 'next/dynamic'
+import StockTxnCountGraph from '../../components/StockTxnCountGraph'
+// import dynamic from 'next/dynamic'
 
-const DynamicPlot = dynamic(import('../../components/StockTxnCountGraph'), {
-  ssr: false,
-})
+// const DynamicPlot = dynamic(import('../../components/StockTxnCountGraph'), {
+//   ssr: false,
+// })
 
 export default function Stock({ prices, trades }) {
   const router = useRouter()
@@ -19,7 +19,7 @@ export default function Stock({ prices, trades }) {
   return (
     <>
       <h1>Stock Symbol: {prices[0].symbol.toUpperCase()}</h1>
-      <DynamicPlot prices={prices} />
+      <StockTxnCountGraph prices={prices} />
       <h3>Length of price array: {prices.length}</h3>
       <TransactionsTable symbol={Stock.toLowerCase()} trades={trades} />
     </>

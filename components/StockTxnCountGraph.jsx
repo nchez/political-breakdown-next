@@ -4,22 +4,29 @@ import {
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   Title,
   Tooltip,
-  Legen,
+  Legend,
   Filler,
+  LineController,
+  BarController,
 } from 'chart.js'
 import { Bar, Line, Scatter, Bubble, Chart } from 'react-chartjs-2'
+import * as React from 'react'
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
   PointElement,
+  BarElement,
   LineElement,
   Title,
   Tooltip,
-  Legen,
-  Filler
+  Legend,
+  Filler,
+  LineController,
+  BarController
 )
 
 export default function StockTxnCountGraph({ prices }) {
@@ -34,32 +41,84 @@ export default function StockTxnCountGraph({ prices }) {
     return dateString
   }
   const pricesY = prices.map((e) => e.close)
-  const datesX = prices.map((e) => dateToString(e.transactionDate))
+  const datesX = prices.map((e) => dateToString(e.date))
+  const sells = prices.map((e) => e.sellCount)
+  const buys = prices.map((e) => e.buyCount)
 
   const tradesY = prices.map((e) => e.txnCount)
 
   const labels = datesX
 
-  const trades = {
+  const sellData = {
     type: 'bar',
-    label: 'Trades',
-    borderRadius: 30,
-    data: tradesY,
-    backgroundColor: 'rgba(32,214,155,1)',
+    label: 'Sells',
+    borderRadius: 0,
+    data: sells,
+    yAxisID: 'yTrades',
+    backgroundColor: 'rgba(236, 75, 75, 0.6)',
+    barThickness: 10,
+  }
+  const buyData = {
+    type: 'bar',
+    label: 'Buys',
+    data: buys,
+    borderRadius: 0,
+    yAxisID: 'yTrades',
+    backgroundColor: 'rgba(43, 200, 74, 0.6)',
     barThickness: 10,
   }
   const pricesDataset = {
     type: 'line',
     label: 'Prices',
     data: pricesY,
+    yAxisID: 'Prices',
     backgroundColor: 'rgba(1,98,255,1)',
   }
 
-  const data = { labels: labels, datasets: [trades, pricesDataset] }
+  const options = {
+    responsive: true,
+    // interaction: {
+    //   mode: 'index',
+    //   intersect: false,
+    // },
+    stacked: false,
+    plugins: {
+      title: {
+        display: true,
+        text: 'Chart.js Line Chart - Multi Axis',
+      },
+    },
+    scales: {
+      x: {
+        stacked: true,
+      },
+      Prices: {
+        type: 'linear',
+        position: 'right',
+        axis: 'y',
+        title: { display: true, text: 'Prices' },
+      },
+      yTrades: {
+        stacked: true,
+        title: {
+          display: true,
+          text: '# of Trades',
+        },
+        type: 'linear',
+        axis: 'y',
+        position: 'left',
+      },
+    },
+  }
+
+  const data = {
+    labels: labels,
+    datasets: [sellData, buyData, pricesDataset],
+  }
 
   return (
     <>
-      <Chart type={bar} data={data} />
+      <Chart type="line" options={options} data={data} />
     </>
   )
 }
