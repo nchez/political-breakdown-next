@@ -2,6 +2,7 @@ import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
+  LogarithmicScale,
   PointElement,
   LineElement,
   BarElement,
@@ -18,6 +19,7 @@ import * as React from 'react'
 ChartJS.register(
   CategoryScale,
   LinearScale,
+  LogarithmicScale,
   PointElement,
   BarElement,
   LineElement,
@@ -40,12 +42,14 @@ export default function StockTxnCountGraph({ prices }) {
       ogString.slice(0, 4)
     return dateString
   }
-  const pricesY = prices.map((e) => e.close)
-  const datesX = prices.map((e) => dateToString(e.date))
-  const sells = prices.map((e) => e.sellCount)
-  const buys = prices.map((e) => e.buyCount)
-
-  const tradesY = prices.map((e) => e.txnCount)
+  const pricesY = prices.close
+  const datesX = prices.date.map((e) => dateToString(e))
+  const sellVolume = prices.sellVolume.map((e) => {
+    return e === 0 ? null : e
+  })
+  const buyVolume = prices.buyVolume.map((e) => {
+    return e === 0 ? null : e
+  })
 
   const labels = datesX
 
@@ -53,19 +57,21 @@ export default function StockTxnCountGraph({ prices }) {
     type: 'bar',
     label: 'Sells',
     borderRadius: 0,
-    data: sells,
+    data: sellVolume,
     yAxisID: 'yTrades',
-    backgroundColor: 'rgba(236, 75, 75, 0.6)',
-    barThickness: 10,
+    backgroundColor: 'rgba(236, 75, 75, 0.8)',
+    barThickness: 'flex',
+    skipNull: true,
   }
   const buyData = {
     type: 'bar',
     label: 'Buys',
-    data: buys,
+    data: buyVolume,
     borderRadius: 0,
     yAxisID: 'yTrades',
-    backgroundColor: 'rgba(43, 200, 74, 0.6)',
-    barThickness: 10,
+    backgroundColor: 'rgba(43, 200, 74, 0.8)',
+    barThickness: 'flex',
+    skipNull: true,
   }
   const pricesDataset = {
     type: 'line',
@@ -85,7 +91,7 @@ export default function StockTxnCountGraph({ prices }) {
     plugins: {
       title: {
         display: true,
-        text: 'Chart.js Line Chart - Multi Axis',
+        text: `${prices.symbol.toUpperCase()} Stock Price with Daily Buy and Sell Counts`,
       },
     },
     scales: {
@@ -99,12 +105,12 @@ export default function StockTxnCountGraph({ prices }) {
         title: { display: true, text: 'Prices' },
       },
       yTrades: {
-        stacked: true,
+        stacked: false,
         title: {
           display: true,
           text: '# of Trades',
         },
-        type: 'linear',
+        type: 'logarithmic',
         axis: 'y',
         position: 'left',
       },
