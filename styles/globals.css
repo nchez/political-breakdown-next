@@ -14,3 +14,65 @@ a {
 * {
   box-sizing: border-box;
 }
+.table-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.stock-page-graph-div {
+  margin-left: 2rem;
+  margin-right: 2rem;
+  position: relative;
+}
+
+.stock-trades-table {
+  border-collapse: collapse;
+  margin: 25px 0;
+  margin-bottom: 10px;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  min-width: 400px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.stock-trades-table thead tr {
+  background-color: #009879;
+  color: #ffffff;
+  text-align: left;
+}
+
+.stock-trades-table th,
+.stock-trades-table td {
+  text-align: center;
+  padding: 12px 15px;
+}
+
+.stock-trades-table tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.stock-trades-table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.stock-trades-table tbody tr:last-of-type {
+  border-bottom: 2px solid #009879;
+}
+
+.stock-trades-table tbody tr.active-row {
+  font-weight: bold;
+  color: #009879;
+}
+
+.trade-table-pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+.trade-table-pagination a:hover:not(.active) {
+  background-color: #ddd;
+}

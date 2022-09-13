@@ -124,7 +124,9 @@ export default function StockTxnCountGraph({ prices }) {
 
   return (
     <>
-      <Chart type="line" options={options} data={data} />
+      <div className="stock-page-graph-div">
+        <Chart type="line" options={options} data={data} />
+      </div>
     </>
   )
 }
