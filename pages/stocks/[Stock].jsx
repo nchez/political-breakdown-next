@@ -1,22 +1,49 @@
 import React from 'react'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { useQueryClient, useQuery } from 'react-query'
 import TransactionsTable from '../../components/TransactionsTable'
-import { loadStocks, loadSingleStockPrices } from '../../lib/loadStocks'
+import {
+  loadStocks,
+  loadSingleStockPrices,
+  loadSingleStockInfo,
+  loadFinnHubStockProfile,
+} from '../../lib/loadStocks'
 import StockTxnCountGraph from '../../components/StockTxnCountGraph'
 
-export default function Stock({ prices, trades }) {
+export default function Stock({ prices, profile }) {
+  console.log(profile)
   const router = useRouter()
   const { Stock } = router.query
 
+  const queryClient = useQueryClient()
+  const { data, status, error } = useQuery(
+    ['loadStockInfo', Stock],
+    async () => {
+      const data = await loadSingleStockInfo(Stock)
+      return data
+    },
+    { keepPreviousData: true }
+    // in ms}
+  )
+
+  const title = (
+    <>
+      <h1>
+        {data ? `${data.stock.name} (${Stock.toUpperCase()})` : 'still loading'}
+      </h1>
+      <h3>{data ? `Sector: ${data.stock.sector}` : 'still loading'}</h3>
+    </>
+  )
+
   return (
     <>
-      <h1>Stock Symbol: {Stock.toUpperCase()}</h1>
-
+      {title}
       <StockTxnCountGraph prices={prices} />
-
-      <h3>Length of price array: {prices.length}</h3>
-      <TransactionsTable symbol={Stock.toLowerCase()} />
+      <TransactionsTable
+        symbol={Stock.toLowerCase()}
+        stockName={data?.stock.name}
+      />
     </>
   )
 }
@@ -36,7 +63,8 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   const { prices } = await loadSingleStockPrices(params.Stock)
+  const stockProfile = await loadFinnHubStockProfile(params.Stock)
   return {
-    props: { prices: prices },
+    props: { prices: prices, profile: stockProfile },
   }
 }

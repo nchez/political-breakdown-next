@@ -11,6 +11,17 @@ a {
   text-decoration: none;
 }
 
+h1 {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 5px;
+}
+h3 {
+  margin-top: 0px;
+  display: flex;
+  justify-content: center;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -66,13 +77,22 @@ a {
   color: #009879;
 }
 
-.trade-table-pagination a {
+.trade-table-pagination {
+  margin-bottom: 10px;
+}
+
+.trade-table-pagination div {
   color: black;
   float: left;
   padding: 8px 16px;
   text-decoration: none;
 }
 
-.trade-table-pagination a:hover:not(.active) {
+.trade-table-pagination .active {
+  background-color: rgb(58, 200, 93);
+  border-radius: 10px;
+}
+
+.trade-table-pagination div:hover:not(.active) {
   background-color: #ddd;
 }
