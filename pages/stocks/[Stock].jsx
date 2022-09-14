@@ -1,4 +1,5 @@
 import React from 'react'
+import Image from 'next/image'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { useQueryClient, useQuery } from 'react-query'
@@ -28,11 +29,27 @@ export default function Stock({ prices, profile }) {
   )
 
   const title = (
+    // need to add website, logo, marketcap -- will require flexbox formatting
     <>
-      <h1>
-        {data ? `${data.stock.name} (${Stock.toUpperCase()})` : 'still loading'}
-      </h1>
-      <h3>{data ? `Sector: ${data.stock.sector}` : 'still loading'}</h3>
+      <h1>{data ? `${data.stock.name}` : 'still loading'}</h1>
+      <div className="stock-card">
+        <div className="stock-logo-div">
+          <Image
+            src={profile.logo}
+            alt={`picture of ${data?.stock.name} logo`}
+            width={100}
+            height={5}
+          />
+        </div>
+        <div className="stock-info-div">
+          <h3>Proper Name: {profile.name}</h3>
+          {/* <h3>{data ? `Sector: ${data.stock.sector}` : 'still loading'}</h3> */}
+          <h3>Industry: {profile.finnhubIndustry}</h3>
+          <h3 style={{ color: 'blue' }}>
+            <a href={`${profile.weburl}`}>Company Website</a>
+          </h3>
+        </div>
+      </div>
     </>
   )
 
