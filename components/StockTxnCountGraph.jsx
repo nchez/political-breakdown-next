@@ -83,6 +83,7 @@ export default function StockTxnCountGraph({ prices }) {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     // interaction: {
     //   mode: 'index',
     //   intersect: false,
@@ -91,7 +92,7 @@ export default function StockTxnCountGraph({ prices }) {
     plugins: {
       title: {
         display: true,
-        text: `${prices.symbol.toUpperCase()} Stock Price with Daily Buy and Sell Counts`,
+        text: `${prices.symbol.toUpperCase()} Stock Price with Daily Congress Buy and Sell Volume`,
       },
     },
     scales: {
@@ -108,7 +109,7 @@ export default function StockTxnCountGraph({ prices }) {
         stacked: false,
         title: {
           display: true,
-          text: '# of Trades',
+          text: 'Trade Volume ($)',
         },
         type: 'logarithmic',
         axis: 'y',
@@ -122,11 +123,5 @@ export default function StockTxnCountGraph({ prices }) {
     datasets: [sellData, buyData, pricesDataset],
   }
 
-  return (
-    <>
-      <div className="stock-page-graph-div">
-        <Chart type="line" options={options} data={data} />
-      </div>
-    </>
-  )
+  return <Chart type="line" options={options} data={data} />
 }

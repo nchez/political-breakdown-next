@@ -1,6 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useQueryClient, useQuery } from 'react-query'
 import TransactionsTable from '../../components/TransactionsTable'
@@ -11,9 +11,11 @@ import {
   loadFinnHubStockProfile,
 } from '../../lib/loadStocks'
 import StockTxnCountGraph from '../../components/StockTxnCountGraph'
+import CongressTraders from '../../components/CongressTraders'
+import SelectedStockTable from '../../components/SelectedStockTable'
 
 export default function Stock({ prices, profile }) {
-  console.log(profile)
+  const [selectedStocks, setSelectedStocks] = useState([])
   const router = useRouter()
   const { Stock } = router.query
 
@@ -27,6 +29,12 @@ export default function Stock({ prices, profile }) {
     { keepPreviousData: true }
     // in ms}
   )
+
+  const handleSelect = (event, id) => {
+    if (event.target.checked) {
+      console.log('checkbox is checked')
+    }
+  }
 
   const title = (
     // need to add website, logo, marketcap -- will require flexbox formatting
@@ -56,10 +64,23 @@ export default function Stock({ prices, profile }) {
   return (
     <>
       {title}
-      <StockTxnCountGraph prices={prices} />
+      <div className="chart-div">
+        <div className="main-stock-graph-div">
+          <StockTxnCountGraph prices={prices} />
+        </div>
+        <div className="congress-traders-div">
+          <CongressTraders symbol={Stock.toLowerCase()} />
+        </div>
+      </div>
+      {/* <SelectedStockTable
+        selected={selectedStocks}
+        symbol={Stock.toLowerCase()}
+        handleSelect={handleSelect}
+      /> */}
       <TransactionsTable
         symbol={Stock.toLowerCase()}
         stockName={data?.stock.name}
+        handleSelect={handleSelect}
       />
     </>
   )
@@ -82,6 +103,9 @@ export async function getStaticProps({ params }) {
   const { prices } = await loadSingleStockPrices(params.Stock)
   const stockProfile = await loadFinnHubStockProfile(params.Stock)
   return {
-    props: { prices: prices, profile: stockProfile },
+    props: {
+      prices: prices,
+      profile: stockProfile,
+    },
   }
 }

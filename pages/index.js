@@ -5,10 +5,9 @@ import { useEffect } from 'react'
 import { loadStock, loadStocks } from '../lib/loadStocks'
 
 export default function Home({ prices }) {
-  console.log(prices)
   return (
     <div className={styles.container}>
-      <h1>DO NOT COMMIT THIS</h1>
+      <h1>Hi</h1>
       <p>{prices.length}</p>
     </div>
   )

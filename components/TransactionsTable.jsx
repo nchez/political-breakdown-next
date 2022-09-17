@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react'
 
 // isLoading (status === 'loading'), isError (status = 'error'), isSuccess (or status === 'success'), can be isIdle (status = 'idle')
 
-export default function TransactionsTable({ symbol, stockName }) {
+export default function TransactionsTable({ symbol, stockName, handleSelect }) {
   const [rows, setRows] = useState(10)
   const [start, setStart] = useState(0)
   const [startingPage, setStartingPage] = useState(1)
@@ -65,6 +65,7 @@ export default function TransactionsTable({ symbol, stockName }) {
       setIsPrevData(isPreviousData)
     }
   }
+
   const tradesTableHeaders = (
     <tr>
       <th>Selected</th>
@@ -83,6 +84,7 @@ export default function TransactionsTable({ symbol, stockName }) {
       <tr key={`transaction-key-${element._id}`}>
         <td>
           <input
+            onChange={handleSelect}
             type="checkbox"
             id={`${element._id}`}
             name={`${element._id}`}
@@ -113,6 +115,7 @@ export default function TransactionsTable({ symbol, stockName }) {
         </tbody>
       </table>
       <div className="trade-table-pagination">
+        {/* need to map these out and have a conditional if the max entries are reached ... i.e. page #'s will go on indefinitely in current state */}
         <div onClick={handlePreviousPage}>&laquo;</div>
         <div
           className={page === startingPage ? 'active' : ''}

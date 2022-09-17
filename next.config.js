@@ -9,6 +9,6 @@ const nextConfig = {
 module.exports = {
   reactStrictMode: true,
   images: {
-    domains: ['static.finnhub.io'],
+    domains: ['static.finnhub.io', 'static2.finnhub.io'],
   },
 }

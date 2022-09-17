@@ -35,6 +35,7 @@ h3 {
 .stock-card {
   display: flex;
   justify-content: center;
+  margin-bottom: 5px;
 }
 
 .stock-info-div {
@@ -55,11 +56,11 @@ h3 {
   display: flex;
 }
 
-.stock-page-graph-div {
+/* .stock-page-graph-div {
   margin-left: 2rem;
   margin-right: 2rem;
   position: relative;
-}
+} */
 
 .stock-trades-table {
   border-collapse: collapse;
@@ -98,6 +99,27 @@ h3 {
 .stock-trades-table tbody tr.active-row {
   font-weight: bold;
   color: #009879;
+}
+
+.chart-div {
+  display: flex;
+  border: 2px solid black;
+  justify-content: center;
+}
+.main-stock-graph-div {
+  position: relative;
+  width: 40vw;
+  height: 40vh;
+  margin-left: 5px;
+  /* flex-grow: ; */
+  border: 2px solid green;
+}
+.congress-traders-div {
+  width: 40vw;
+  height: 40vh;
+  position: relative;
+  border: 2px solid red;
+  /* max-width: inherit; */
 }
 
 .trade-table-pagination {
